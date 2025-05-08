@@ -1,0 +1,13 @@
+{
+  "server": {
+    "port": "8080"
+  },
+  "client": {
+    "yarik_id": "yaroslav_1",
+    "daily_limit_minutes": 120,
+    "allowed_hours": {
+      "start": "08:00",
+      "end": "20:00"
+    }
+  }
+}
