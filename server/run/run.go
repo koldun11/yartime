@@ -3,6 +3,7 @@ package run
 import (
 	"context"
 	"github.com/koldun11/yartime/server/config"
+	"github.com/koldun11/yartime/server/internal/infrastructure/server"
 	"go.uber.org/fx"
 	"go.uber.org/zap"
 )
@@ -10,14 +11,16 @@ import (
 type App struct {
 	conf   *config.AppConfig
 	logger *zap.Logger
+	server *server.Server
 
 	// TODO: implement
 }
 
-func NewApp(conf *config.AppConfig, logger *zap.Logger) *App {
+func NewApp(conf *config.AppConfig, logger *zap.Logger, server *server.Server) *App {
 	return &App{
 		conf:   conf,
 		logger: logger,
+		server: server,
 	}
 }
 
@@ -34,16 +37,10 @@ func Start(lc fx.Lifecycle, app *App) {
 
 // start при запуске приложения
 func (a *App) start(ctx context.Context) error {
-	// TODO: Реализовать запуск HTTP-сервера
-	a.logger.Info("Starting server", // TODO: заменить на актуальные параметры
-		zap.String("port", a.conf.Server.Port),
-		zap.String("client_id", a.conf.Client.ClientID),
-		zap.Int("daily_limit", a.conf.Client.DailyLimitMinutes))
-	return nil
+	return a.server.Start()
 }
 
 // stop при остановке приложения
 func (a *App) stop(ctx context.Context) error {
-	a.logger.Info("Stopping server")
-	return nil
+	return a.server.Stop(ctx)
 }

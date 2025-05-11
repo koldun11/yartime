@@ -37,5 +37,6 @@ func NewAppConfig(path string) (*AppConfig, error) {
 	if err := json.Unmarshal(data, &config); err != nil {
 		return nil, err
 	}
+	// TODO: Валидация конфигурации, дефолтные значения
 	return &config, nil
 }
