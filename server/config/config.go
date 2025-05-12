@@ -23,20 +23,24 @@ type ClientConfig struct {
 
 // AppConfig общая структура конфигурации
 type AppConfig struct {
-	Server ServConfig   `json:"server"`
-	Client ClientConfig `json:"client"`
+	ConfigPath string       `json:"-"`
+	Server     ServConfig   `json:"server"`
+	Client     ClientConfig `json:"client"`
 }
 
 // NewAppConfig загружает конфигурацию из JSON
 func NewAppConfig(path string) (*AppConfig, error) {
-	var config AppConfig
 	data, err := os.ReadFile(path)
 	if err != nil {
 		return nil, err
 	}
+
+	var config AppConfig
 	if err := json.Unmarshal(data, &config); err != nil {
 		return nil, err
 	}
+
+	config.ConfigPath = path // Сохраняем путь к файлу
 	// TODO: Валидация конфигурации, дефолтные значения
 	return &config, nil
 }

@@ -2,24 +2,16 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/koldun11/yartime/server/internal/models"
+	"github.com/koldun11/yartime/server/internal/service"
 )
 
-// TODO: сам сервис
-
-// Service интерфейс для слоя сервиса
-type Service interface {
-	GetClientConfig(c *gin.Context) (*models.ClientConfigResponse, error)
-	SetAllowedHours(c *gin.Context, start, end string) error
-	SetCronLine(c *gin.Context, cronLine string) error
-	SetDailyLimit(c *gin.Context, limit int) error
-}
-
+// Handler структура для обработчиков
 type Handler struct {
-	service Service
+	service service.Servicer
 }
 
-func NewHandler(service Service) *Handler {
+// NewHandler создаёт новый Handler
+func NewHandler(service *service.Service) *Handler {
 	return &Handler{
 		service: service,
 	}
@@ -27,7 +19,7 @@ func NewHandler(service Service) *Handler {
 
 // GetClientConfig обрабатывает запрос на получение конфигурации клиента
 func (h *Handler) GetClientConfig(c *gin.Context) {
-	config, err := h.service.GetClientConfig(c)
+	config, err := h.service.GetClientConfig()
 	if err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
@@ -36,7 +28,7 @@ func (h *Handler) GetClientConfig(c *gin.Context) {
 }
 
 // TODO: нормальные модели
-// TODO : responder??
+// TODO: responder??
 
 // SetAllowedHours обрабатывает запрос на установку диапазона времени
 func (h *Handler) SetAllowedHours(c *gin.Context) {
@@ -48,7 +40,7 @@ func (h *Handler) SetAllowedHours(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "invalid request body"})
 		return
 	}
-	if err := h.service.SetAllowedHours(c, req.Start, req.End); err != nil {
+	if err := h.service.SetAllowedHours(req.Start, req.End); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -64,7 +56,7 @@ func (h *Handler) SetCronLine(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "invalid request body"})
 		return
 	}
-	if err := h.service.SetCronLine(c, req.CronLine); err != nil {
+	if err := h.service.SetCronLine(req.CronLine); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}
@@ -80,7 +72,7 @@ func (h *Handler) SetDailyLimit(c *gin.Context) {
 		c.JSON(400, gin.H{"error": "invalid request body"})
 		return
 	}
-	if err := h.service.SetDailyLimit(c, req.DailyLimitMinutes); err != nil {
+	if err := h.service.SetDailyLimit(req.DailyLimitMinutes); err != nil {
 		c.JSON(500, gin.H{"error": err.Error()})
 		return
 	}

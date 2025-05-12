@@ -4,9 +4,9 @@
   },
   "client": {
     "client_id": "yaroslav_1",
-    "daily_limit_minutes": 120,
-    "allowed_hours_start": "08:00",
-    "allowed_hours_end": "20:00",
+    "daily_limit_minutes": 180,
+    "allowed_hours_start": "09:00",
+    "allowed_hours_end": "21:00",
     "execute_on_start": "echo 'Client started'",
     "cron_line": "0 0 * * *"
   }
