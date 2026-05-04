@@ -12,12 +12,13 @@ import (
 	"go.uber.org/zap"
 )
 
+var version = "0.0.0"
+
 const configPath = "config/config.json"
 
 func main() {
 	fx.New(
 		fx.Provide(
-			// Предоставляем *config.AppConfig
 			func() (*config.AppConfig, error) {
 				return config.NewAppConfig(configPath)
 			},
@@ -29,5 +30,10 @@ func main() {
 			server.NewServer,
 		),
 		fx.Invoke(run.Start),
+		fx.WithLogger(func() *zap.Logger {
+			logger, _ := zap.NewDevelopment()
+			logger.Info("Starting yartime server", zap.String("version", version))
+			return logger
+		}),
 	).Run()
 }

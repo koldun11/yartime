@@ -1,7 +1,7 @@
 name: Build and Deploy to VPS
 on:
   push:
-    branches: [ main ]
+    tags: ['v*']
 
 env:
   GO_VERSION: '1.22'
@@ -12,15 +12,17 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
 
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
 
-    - name: Get version from git
+    - name: Get version from git tag
       id: version
-      run: echo "version=$(git describe --tags --always --dirty)" >> $GITHUB_OUTPUT
+      run: echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
 
     - name: Build client
       working-directory: client
@@ -30,18 +32,15 @@ jobs:
           -o yartime-client-linux-amd64 \
           ./cmd/client
 
-    - name: Compute checksum
+    - name: Compute checksum and create version.json
       working-directory: client
+      id: checksum
       run: |
         CHECKSUM=$(sha256sum yartime-client-linux-amd64 | awk '{print $1}')
         echo "checksum=${CHECKSUM}" >> $GITHUB_OUTPUT
-        cat > version.json <<EOF
-        {
-          "version": "${{ steps.version.outputs.version }}",
-          "checksum": "${CHECKSUM}"
-        }
-        EOF
-      id: checksum
+        printf '{"version":"%s","checksum":"%s"}\n' \
+          "${{ steps.version.outputs.version }}" \
+          "${CHECKSUM}" > version.json
 
     - name: Log in to Docker Hub
       uses: docker/login-action@v3
