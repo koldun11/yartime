@@ -5,6 +5,7 @@ on:
 
 env:
   GO_VERSION: '1.22'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
   build:
@@ -19,6 +20,9 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
+        cache-dependency-path: |
+          server/go.sum
+          client/go.sum
 
     - name: Get version from git tag
       id: version
@@ -49,7 +53,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Build and push Docker image
-      uses: docker/build-push-action@v5
+      uses: docker/build-push-action@v6
       with:
         context: server/
         push: true
