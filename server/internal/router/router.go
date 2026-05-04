@@ -9,7 +9,6 @@ import (
 func NewRouter(h *handler.Handler) *gin.Engine {
 	r := gin.Default()
 
-	// Маршруты
 	r.GET("/health", func(c *gin.Context) {
 		c.JSON(200, gin.H{
 			"status": "OK",
@@ -20,6 +19,9 @@ func NewRouter(h *handler.Handler) *gin.Engine {
 	r.POST("/client/allowed_hours", h.SetAllowedHours)
 	r.POST("/client/cron_line", h.SetCronLine)
 	r.POST("/client/daily_limit", h.SetDailyLimit)
+	r.POST("/client/controlled_apps", h.SetControlledApps)
+	r.GET("/client/version", h.GetVersion)
+	r.GET("/client/binary", h.DownloadBinary)
 
 	return r
 }

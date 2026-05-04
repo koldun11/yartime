@@ -7,18 +7,19 @@ import (
 
 // ServConfig конфигурация сервера
 type ServConfig struct {
-	Port string `json:"port"`
-	// TODO : implement
+	Port      string `json:"port"`
+	BinaryDir string `json:"binary_dir"`
 }
 
 // ClientConfig конфигурация клиента
 type ClientConfig struct {
-	ClientID          string `json:"client_id"`
-	DailyLimitMinutes int    `json:"daily_limit_minutes"`
-	AllowedHoursStart string `json:"allowed_hours_start"`
-	AllowedHoursEnd   string `json:"allowed_hours_end"`
-	ExecuteOnStart    string `json:"execute_on_start"`
-	CronLine          string `json:"cron_line"`
+	ClientID          string   `json:"client_id"`
+	DailyLimitMinutes int      `json:"daily_limit_minutes"`
+	AllowedHoursStart string   `json:"allowed_hours_start"`
+	AllowedHoursEnd   string   `json:"allowed_hours_end"`
+	ExecuteOnStart    string   `json:"execute_on_start"`
+	CronLine          string   `json:"cron_line"`
+	ControlledApps    []string `json:"controlled_apps"`
 }
 
 // AppConfig общая структура конфигурации

@@ -1,6 +1,7 @@
 {
   "server": {
-    "port": "8080"
+    "port": "8080",
+    "binary_dir": "/root/yartime-server/binaries"
   },
   "client": {
     "client_id": "yaroslav_1",
@@ -8,6 +9,7 @@
     "allowed_hours_start": "09:00",
     "allowed_hours_end": "21:00",
     "execute_on_start": "echo 'Client started'",
-    "cron_line": "0 0 * * *"
+    "cron_line": "0 0 * * *",
+    "controlled_apps": ["firefox", "google-chrome"]
   }
 }
