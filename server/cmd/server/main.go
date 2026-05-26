@@ -9,6 +9,7 @@ import (
 	"github.com/koldun11/yartime/server/run"
 
 	"go.uber.org/fx"
+	"go.uber.org/fx/fxevent"
 	"go.uber.org/zap"
 )
 
@@ -22,7 +23,6 @@ func main() {
 			func() (*config.AppConfig, error) {
 				return config.NewAppConfig(configPath)
 			},
-			zap.NewDevelopment,
 			run.NewApp,
 			service.NewService,
 			handler.NewHandler,
@@ -30,10 +30,10 @@ func main() {
 			server.NewServer,
 		),
 		fx.Invoke(run.Start),
-		fx.WithLogger(func() *zap.Logger {
+		fx.WithLogger(func() fxevent.Logger {
 			logger, _ := zap.NewDevelopment()
 			logger.Info("Starting yartime server", zap.String("version", version))
-			return logger
+			return &fxevent.ZapLogger{Logger: logger}
 		}),
 	).Run()
 }
